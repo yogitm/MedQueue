@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        NODE_ENV = 'production'
-    }
-
     stages {
         stage('1. Environment Inspection') {
             steps {
@@ -18,7 +14,7 @@ pipeline {
             steps {
                 echo '=== Menginstal dependensi Backend ==='
                 dir('backend') {
-                    sh 'npm install'
+                    sh 'npm install --include=dev'
                 }
             }
         }
@@ -36,7 +32,7 @@ pipeline {
             steps {
                 echo '=== Menginstal dependensi Frontend ==='
                 dir('frontend') {
-                    sh 'npm install'
+                    sh 'npm install --include=dev'
                 }
             }
         }
