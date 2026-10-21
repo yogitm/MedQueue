@@ -32,7 +32,7 @@ pipeline {
         stage('4. SonarQube Code Quality Analysis') {
             steps {
                 echo '=== Menjalankan Analisis Kualitas Kode (SonarQube) ==='
-                sh 'sonar-scanner -Dsonar.host.url=https://sonar.yogitrim.my.id -Dsonar.login=squ_663fa8497be6b5b67af74b8f214118e8fca7b695'
+                sh 'sonar-scanner -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=squ_663fa8497be6b5b67af74b8f214118e8fca7b695'
             }
         }
 
