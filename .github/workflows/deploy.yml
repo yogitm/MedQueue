@@ -1,0 +1,70 @@
+name: MedQueue CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  # ==========================================
+  # STAGE 1: Automated Testing & Build
+  # ==========================================
+  test-and-build:
+    name: 🧪 Test & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Node.js v22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: |
+            backend/package.json
+            frontend/package.json
+
+      - name: 📦 Install Backend Dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: 🔬 Run Backend Automated Tests
+        run: |
+          cd backend
+          npm test
+
+      - name: 📦 Install Frontend Dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: 🏗️ Build Frontend Production Bundle (Vite)
+        run: |
+          cd frontend
+          npm run build
+
+      - name: 📤 Archive Frontend Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-production-dist
+          path: frontend/dist/
+          retention-days: 7
+
+  # ==========================================
+  # STAGE 2: Summary Notification
+  # ==========================================
+  pipeline-summary:
+    name: ✅ Pipeline Status
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report Success
+        run: |
+          echo "🎉 CI/CD Pipeline Berhasil dieksekusi!"
+          echo "Semua unit test backend lulus dan bundle produksi frontend selesai di-build."
+          echo "Aplikasi MedQueue live di: https://medqueue.yogitrim.my.id"
