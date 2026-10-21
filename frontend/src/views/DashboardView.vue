@@ -11,7 +11,6 @@ import {
   AlertCircle,
   Stethoscope,
   X,
-  FileText,
   Trash2,
   Edit,
   AlertTriangle
@@ -311,7 +310,8 @@ onUnmounted(() => {
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+        <table class="w-full text-left border-collapse" aria-label="Daftar Antrean Pasien">
+          <caption class="sr-only">Tabel Daftar Antrean Pasien Puskesmas</caption>
           <thead>
             <tr class="bg-slate-50/80 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
               <th class="px-6 py-3.5">Nomor Antrean</th>

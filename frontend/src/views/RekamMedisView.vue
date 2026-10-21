@@ -5,16 +5,13 @@ import {
   FileCheck2, 
   Search, 
   RefreshCw, 
-  Calendar, 
   Clock, 
   Printer, 
   Edit3, 
   AlertCircle, 
   CheckCircle2, 
-  Pill, 
   Activity, 
   FileText,
-  User,
   X,
   Trash2,
   AlertTriangle
@@ -242,7 +239,8 @@ onMounted(() => {
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+        <table class="w-full text-left border-collapse" aria-label="Daftar Rekam Medis Pasien">
+          <caption class="sr-only">Tabel Rekam Medis Pasien Berstatus Selesai</caption>
           <thead>
             <tr class="bg-slate-50/80 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
               <th class="px-6 py-3.5">No. Antrean</th>
