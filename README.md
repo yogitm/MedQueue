@@ -88,4 +88,47 @@ PROJECT 1/
 | `waktu_daftar` | `DATETIME` | Waktu registrasi antrean, default: `CURRENT_TIMESTAMP` |
 | `waktu_selesai` | `DATETIME` | Waktu saat pemeriksaan pasien diselesaikan |
 
+### Tabel `users` (Tenaga Medis & Dokter)
+| Kolom | Tipe | Keterangan |
+|---|---|---|
+| `id` | `INTEGER` | Primary Key, Auto Increment |
+| `username` | `TEXT` | Username login unik (Wajib) |
+| `password` | `TEXT` | Password terenkripsi Hash Bcrypt (Wajib) |
+| `nama` | `TEXT` | Nama lengkap dokter beserta gelar |
+| `role` | `TEXT` | `CHECK(role IN ('dokter', 'admin', 'petugas'))`, default `'dokter'` |
+| `sip` | `TEXT` | Nomor Surat Izin Praktik (SIP) dokter |
+| `created_at` | `DATETIME` | Default: `CURRENT_TIMESTAMP` |
+
+---
+
+## 🔒 Sistem Keamanan & Autentikasi Dokter
+
+Untuk menjaga privasi medis dan mencegah pasien mengakses dashboard pemanggilan serta catatan rekam medis, sistem menerapkan **Role-Based Access Control (RBAC)** dan **JWT Token Authentication**:
+
+1. **Rute Publik (Pasien & Monitor TV)**:
+   - `POST /api/antrean` : Pendaftaran mandiri pasien untuk mengambil nomor antrean (tanpa login).
+   - `GET /api/antrean/aktif` : Layar monitor TV ruang tunggu (tanpa login).
+   - `POST /api/auth/login` : Endpoint autentikasi dokter/petugas.
+
+2. **Rute Terproteksi Khusus Dokter & Petugas Medis**:
+   - `GET /api/antrean` : Melihat seluruh antrean aktif (menunggu & dipanggil).
+   - `PUT /api/antrean/:id/panggil` : Pemanggilan nomor antrean pasien ke layar TV.
+   - `PUT /api/antrean/:id/selesai` : Menyelesaikan pemeriksaan dan mengisi diagnosa/resep.
+   - `PUT /api/antrean/:id` : Mengubah data antrean aktif.
+   - `DELETE /api/antrean/:id` : Membatalkan/menghapus antrean.
+   - `GET /api/rekam-medis` : Melihat seluruh riwayat rekam medis pasien yang selesai diperiksa.
+   - `PUT /api/rekam-medis/:id` : Memperbarui diagnosa & resep pasien.
+   - `DELETE /api/rekam-medis/:id` : Menghapus data rekam medis.
+
+3. **Frontend Navigation Guard**:
+   - Pasien yang mencoba mengakses rute `/dashboard` atau `/rekam-medis` secara langsung akan otomatis diblokir dan dialihkan ke `/login?unauthorized=1` dengan banner peringatan.
+   - Axios Request Interceptor otomatis menyisipkan token `Bearer <JWT>` pada setiap panggilan API dokter.
+
+### 🔑 Kredensial Akun Default Dokter
+| Akun | Username | Password | Keterangan |
+|---|---|---|---|
+| Dokter 1 | `dokter` | `password123` | dr. Budi Santoso, Sp.PD |
+| Dokter 2 | `dr.siti` | `password123` | dr. Siti Aminah, Sp.A |
+
+
 

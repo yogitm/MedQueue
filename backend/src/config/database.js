@@ -36,10 +36,22 @@ function initDatabase() {
       FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE
     );
 
+    -- Tabel Pengguna / Tenaga Medis (Dokter)
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL,
+      nama TEXT NOT NULL,
+      role TEXT CHECK(role IN ('dokter', 'admin', 'petugas')) DEFAULT 'dokter',
+      sip TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
     -- Indexing untuk pencarian cepat
     CREATE INDEX IF NOT EXISTS idx_queues_status ON queues(status);
     CREATE INDEX IF NOT EXISTS idx_queues_waktu_daftar ON queues(waktu_daftar);
     CREATE INDEX IF NOT EXISTS idx_patients_nik ON patients(nomor_identitas);
+    CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
   `;
 
   db.exec(schemaSQL);
@@ -56,6 +68,21 @@ function initDatabase() {
     db.exec('ALTER TABLE queues ADD COLUMN waktu_selesai DATETIME;');
   }
 
+  // Seed default dokter jika tabel users masih kosong
+  const bcrypt = require('bcryptjs');
+  const userCount = db.prepare('SELECT COUNT(*) as total FROM users').get().total;
+  if (userCount === 0) {
+    const defaultPasswordHash = bcrypt.hashSync('password123', 10);
+    const insertUser = db.prepare(`
+      INSERT INTO users (username, password, nama, role, sip)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+
+    insertUser.run('dokter', defaultPasswordHash, 'dr. Budi Santoso, Sp.PD', 'dokter', 'SIP.503/442/SIP-D/2024');
+    insertUser.run('dr.siti', defaultPasswordHash, 'dr. Siti Aminah, Sp.A', 'dokter', 'SIP.503/443/SIP-D/2024');
+    console.log('🩺 Default Akun Dokter berhasil dibuat (username: dokter / password: password123)');
+  }
+
   console.log('✅ SQLite Database & Tables initialized successfully.');
 }
 
@@ -63,3 +90,4 @@ function initDatabase() {
 initDatabase();
 
 module.exports = db;
+

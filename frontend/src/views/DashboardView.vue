@@ -8,15 +8,17 @@ import {
   Clock, 
   RefreshCw, 
   Search, 
-  AlertCircle,
-  Stethoscope,
-  X,
-  Trash2,
-  Edit,
-  AlertTriangle
+  AlertCircle, 
+  Stethoscope, 
+  X, 
+  Trash2, 
+  Edit, 
+  AlertTriangle 
 } from 'lucide-vue-next';
+import { currentUser } from '../utils/auth';
 
 const queues = ref([]);
+
 const loading = ref(false);
 const actionLoading = ref({}); // Track loading per queue id
 const searchQuery = ref('');
@@ -236,13 +238,19 @@ onUnmounted(() => {
     <!-- Header & Action Bar -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div>
-        <h2 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center space-x-2">
-          <span>Dashboard Dokter & Petugas Medis</span>
-        </h2>
+        <div class="flex flex-wrap items-center gap-2">
+          <h2 class="text-2xl font-bold text-slate-900 tracking-tight flex items-center space-x-2">
+            <span>Dashboard Pemanggilan Dokter</span>
+          </h2>
+          <span v-if="currentUser" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-xs">
+            🩺 {{ currentUser.nama }}
+          </span>
+        </div>
         <p class="text-sm text-slate-500 mt-1">
-          Kelola panggilan dan status pemeriksaan pasien secara terpadu.
+          Kelola antrean dan rekam medis pasien di ruang periksa dokter.
         </p>
       </div>
+
 
       <div class="flex items-center space-x-3">
         <!-- Input Search -->

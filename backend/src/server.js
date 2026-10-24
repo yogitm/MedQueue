@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const queueRoutes = require('./routes/queueRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -32,7 +33,9 @@ app.get('/', (req, res) => {
 });
 
 // Routing API
+app.use('/api/auth', authRoutes);
 app.use('/api', queueRoutes);
+
 
 // 404 Handler untuk rute yang tidak ditemukan
 app.use((req, res) => {

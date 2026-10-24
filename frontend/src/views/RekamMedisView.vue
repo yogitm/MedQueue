@@ -11,14 +11,16 @@ import {
   AlertCircle, 
   CheckCircle2, 
   Activity, 
-  FileText,
-  X,
-  Trash2,
-  AlertTriangle
+  FileText, 
+  X, 
+  Trash2, 
+  AlertTriangle 
 } from 'lucide-vue-next';
+import { currentUser } from '../utils/auth';
 
 // State
 const records = ref([]);
+
 const loading = ref(false);
 const searchQuery = ref('');
 const notification = ref(null);
@@ -174,13 +176,19 @@ onMounted(() => {
           <FileCheck2 class="w-4 h-4 mr-1.5" />
           Arsip & Rekam Medis Pasien
         </div>
-        <h2 class="text-2xl font-bold text-slate-900 tracking-tight">
-          Riwayat Pasien Selesai Periksa
-        </h2>
+        <div class="flex flex-wrap items-center gap-2">
+          <h2 class="text-2xl font-bold text-slate-900 tracking-tight">
+            Riwayat Pasien Selesai Periksa
+          </h2>
+          <span v-if="currentUser" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-xs">
+            🩺 {{ currentUser.nama }}
+          </span>
+        </div>
         <p class="text-sm text-slate-500 mt-1">
           Daftar seluruh pasien yang telah selesai menjalani pemeriksaan medis beserta diagnosa dan resepnya.
         </p>
       </div>
+
 
       <div class="flex items-center space-x-3">
         <!-- Input Search -->
