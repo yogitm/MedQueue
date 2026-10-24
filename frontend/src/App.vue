@@ -9,9 +9,9 @@ import {
   FileCheck2, 
   LogIn, 
   LogOut, 
-  UserCheck, 
   AlertTriangle 
 } from 'lucide-vue-next';
+
 import { isAuthenticated, currentUser, clearAuth } from './utils/auth';
 
 const route = useRoute();

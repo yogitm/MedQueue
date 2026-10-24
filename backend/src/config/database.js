@@ -10,6 +10,8 @@ const db = new Database(dbPath, {
 // Aktifkan Foreign Key constraint & WAL mode untuk performa konkurensi optimal
 db.pragma('foreign_keys = ON');
 db.pragma('journal_mode = WAL');
+db.pragma('busy_timeout = 5000');
+
 
 // Script Inisialisasi Tabel
 function initDatabase() {
